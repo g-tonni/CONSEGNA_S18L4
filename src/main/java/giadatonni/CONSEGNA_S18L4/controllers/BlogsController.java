@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.UUID;
@@ -59,5 +60,10 @@ public class BlogsController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteBlog(@PathVariable UUID blogId){
         blogsService.eliminaBlog(blogId);
+    }
+
+    @PatchMapping("/picture")
+    public void upload(@RequestParam("picture") MultipartFile file){
+        System.out.println(file.getName());
     }
 }

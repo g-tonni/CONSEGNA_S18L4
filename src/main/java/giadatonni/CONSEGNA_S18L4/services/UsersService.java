@@ -89,7 +89,7 @@ public class UsersService {
         System.out.println("L'utente e tutti i suoi post sono stati eliminati");
     }
 
-    public User uploadAvatar(UUID utenteId, MultipartFile file) {
+   /* public User uploadAvatar(UUID utenteId, MultipartFile file) {
         // 1. Controlli (es. dimensione non può superare tot, oppure tipologia file solo .gif...)
         // 2. Find by id dell'utente...
         User found = this.trovaUtente(utenteId);
@@ -110,6 +110,6 @@ public class UsersService {
             throw new RuntimeException(e);
         }
 
-    }
+    }*/
 
 }
