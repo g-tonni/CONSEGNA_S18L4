@@ -2,10 +2,13 @@ package giadatonni.CONSEGNA_S18L4.controllers;
 
 import giadatonni.CONSEGNA_S18L4.entities.Blog;
 import giadatonni.CONSEGNA_S18L4.entities.User;
+import giadatonni.CONSEGNA_S18L4.exceptions.ValidationException;
 import giadatonni.CONSEGNA_S18L4.payload.UserDTO;
 import giadatonni.CONSEGNA_S18L4.services.UsersService;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -30,8 +33,13 @@ public class UsersController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public User addUser(@RequestBody UserDTO body){
-        return usersService.postaUtente(body);
+    public User addUser(@RequestBody @Validated UserDTO body, BindingResult validationResults){
+        if(validationResults.hasErrors()){
+            List<String> errors = validationResults.getFieldErrors().stream().map(fieldError -> fieldError.getDefaultMessage()).toList();
+            throw new ValidationException(errors);
+        } else {
+            return usersService.postaUtente(body);
+        }
     }
 
     @GetMapping("/{userId}")
@@ -40,8 +48,13 @@ public class UsersController {
     }
 
     @PutMapping("/{userId}")
-    public User putUser(@PathVariable UUID userId, @RequestBody UserDTO body){
-        return usersService.modificaUtente(userId, body);
+    public User putUser(@PathVariable UUID userId, @RequestBody @Validated UserDTO body, BindingResult validationResults){
+        if(validationResults.hasErrors()){
+            List<String> errors = validationResults.getFieldErrors().stream().map(fieldError -> fieldError.getDefaultMessage()).toList();
+            throw new ValidationException(errors);
+        } else {
+            return usersService.modificaUtente(userId, body);
+        }
     }
 
     @GetMapping("/trovaBlog/{utenteId}")
@@ -54,7 +67,6 @@ public class UsersController {
     public void deleteListaBlogs(@PathVariable UUID utenteId){
         this.usersService.deleteAllPostByUtenteId(utenteId);
     }
-
 
     @DeleteMapping("/{userId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)

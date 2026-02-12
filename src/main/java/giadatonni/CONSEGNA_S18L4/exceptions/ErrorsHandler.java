@@ -1,6 +1,7 @@
 package giadatonni.CONSEGNA_S18L4.exceptions;
 
 import giadatonni.CONSEGNA_S18L4.payload.ErrorsDTO;
+import giadatonni.CONSEGNA_S18L4.payload.ErrorsListDTO;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -13,6 +14,12 @@ public class ErrorsHandler {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorsDTO handleBadRequest(BadRequestException ex){
         return new ErrorsDTO(ex.getMessage());
+    }
+
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorsListDTO handleValidation(ValidationException ex){
+        return new ErrorsListDTO(ex.getMessage(), ex.getErrorsList());
     }
 
     @ExceptionHandler

@@ -1,12 +1,16 @@
 package giadatonni.CONSEGNA_S18L4.controllers;
 
 import giadatonni.CONSEGNA_S18L4.entities.Blog;
+import giadatonni.CONSEGNA_S18L4.exceptions.ValidationException;
 import giadatonni.CONSEGNA_S18L4.payload.BlogDTO;
 import giadatonni.CONSEGNA_S18L4.services.BlogsService;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -27,8 +31,13 @@ public class BlogsController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Blog addBlog(@RequestBody BlogDTO body){
-        return blogsService.postaBlog(body);
+    public Blog addBlog(@RequestBody @Validated BlogDTO body, BindingResult validationResults){
+        if(validationResults.hasErrors()){
+            List<String> errors = validationResults.getFieldErrors().stream().map(fieldError -> fieldError.getDefaultMessage()).toList();
+            throw new ValidationException(errors);
+        } else {
+            return blogsService.postaBlog(body);
+        }
     }
 
     @GetMapping("/{blogId}")
@@ -37,8 +46,13 @@ public class BlogsController {
     }
 
     @PutMapping("/{blogId}")
-    public Blog putBlog(@PathVariable UUID blogId, @RequestBody BlogDTO body){
-        return blogsService.modificaBlog(blogId, body);
+    public Blog putBlog(@PathVariable UUID blogId, @RequestBody @Validated BlogDTO body, BindingResult validationResults){
+        if(validationResults.hasErrors()){
+            List<String> errors = validationResults.getFieldErrors().stream().map(fieldError -> fieldError.getDefaultMessage()).toList();
+            throw new ValidationException(errors);
+        } else {
+            return blogsService.modificaBlog(blogId, body);
+        }
     }
 
     @DeleteMapping("/{blogId}")

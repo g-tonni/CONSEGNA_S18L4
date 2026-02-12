@@ -1,8 +1,9 @@
 package giadatonni.CONSEGNA_S18L4.exceptions;
 
-import lombok.AllArgsConstructor;
+import lombok.Getter;
 
 import java.util.List;
+@Getter
 public class ValidationException extends RuntimeException {
 
     private List<String> errorsList;
