@@ -1,5 +1,7 @@
 package giadatonni.CONSEGNA_S18L4.services;
 
+import com.cloudinary.Cloudinary;
+import com.cloudinary.utils.ObjectUtils;
 import giadatonni.CONSEGNA_S18L4.entities.Blog;
 import giadatonni.CONSEGNA_S18L4.entities.User;
 import giadatonni.CONSEGNA_S18L4.exceptions.NotFoundException;
@@ -16,8 +18,11 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 @Service
@@ -29,6 +34,7 @@ public class UsersService {
 
     private final UsersRepository usersRepository;
     private final BlogsRepository blogsRepository;
+    private final Cloudinary cloudinaryUploader;
 
     public Page<User> findAll(int page, int size, String orderBy){
         if (size > 100) size = 100;
@@ -81,6 +87,29 @@ public class UsersService {
         User found = this.trovaUtente(userId);
         this.usersRepository.delete(found);
         System.out.println("L'utente e tutti i suoi post sono stati eliminati");
+    }
+
+    public User uploadAvatar(UUID utenteId, MultipartFile file) {
+        // 1. Controlli (es. dimensione non può superare tot, oppure tipologia file solo .gif...)
+        // 2. Find by id dell'utente...
+        User found = this.trovaUtente(utenteId);
+        try {
+            // 3. Upload del file su Cloudinary
+            Map result = cloudinaryUploader.uploader().upload(file.getBytes(), ObjectUtils.emptyMap());
+
+            String imageUrl = (String) result.get("secure_url");
+            // 4. Cloudinary ci torna l'url dell'immagine che salviamo dentro l'utente trovato
+            found.setAvatar(imageUrl);
+            // ...aggiorno l'utente cambiandogli l'url dell'avatar
+            this.usersRepository.save(found);
+            System.out.println("Avatar aggiornato");
+            // 5. Return dell'url
+            return found;
+
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
     }
 
 }

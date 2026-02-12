@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.UUID;
@@ -72,5 +73,12 @@ public class UsersController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteUser(@PathVariable UUID userId){
         usersService.eliminaUtente(userId);
+    }
+
+    @PatchMapping("/{userId}/avatar")
+    public User uploadImage(@RequestParam("profile_picture") MultipartFile file, @PathVariable UUID userId) {
+        // profile_picture deve corrispondere ESATTAMENTE al campo del Form Data dove viene inserito il file
+        // se così non è il file non verrà trovato
+        return this.usersService.uploadAvatar(userId, file);
     }
 }
