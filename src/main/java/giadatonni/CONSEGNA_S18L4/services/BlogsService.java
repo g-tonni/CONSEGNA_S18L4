@@ -3,7 +3,7 @@ package giadatonni.CONSEGNA_S18L4.services;
 import giadatonni.CONSEGNA_S18L4.entities.Blog;
 import giadatonni.CONSEGNA_S18L4.entities.User;
 import giadatonni.CONSEGNA_S18L4.exceptions.NotFoundException;
-import giadatonni.CONSEGNA_S18L4.payload.BlogPayload;
+import giadatonni.CONSEGNA_S18L4.payload.BlogDTO;
 import giadatonni.CONSEGNA_S18L4.repositories.BlogsRepository;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -36,9 +36,9 @@ public class BlogsService {
         return this.blogsRepository.findAll(pageable);
     }
 
-   public Blog postaBlog(BlogPayload body) {
-        User found = this.usersService.trovaUtente(UUID.fromString(body.getUtenteId()));
-        Blog nuovoBlog = new Blog(body.getCategoria(), body.getTitolo(), body.getContenuto(), body.getTempoLettura(), found);
+   public Blog postaBlog(BlogDTO body) {
+        User found = this.usersService.trovaUtente(UUID.fromString(body.utenteId()));
+        Blog nuovoBlog = new Blog(body.categoria(), body.titolo(), body.contenuto(), body.tempoLettura(), found);
         this.blogsRepository.save(nuovoBlog);
         System.out.println("Blog salvato");
         return nuovoBlog;
@@ -50,13 +50,13 @@ public class BlogsService {
         return found;
     }
 
-    public Blog modificaBlog(UUID blogId, BlogPayload body){
+    public Blog modificaBlog(UUID blogId, BlogDTO body){
         Blog found = this.trovaBlog(blogId);
-        User userFound = this.usersService.trovaUtente(UUID.fromString(body.getUtenteId()));
-        found.setCategoria(body.getCategoria());
-        found.setTitolo(body.getTitolo());
-        found.setContenuto(body.getContenuto());
-        found.setTempoLettura(body.getTempoLettura());
+        User userFound = this.usersService.trovaUtente(UUID.fromString(body.utenteId()));
+        found.setCategoria(body.categoria());
+        found.setTitolo(body.titolo());
+        found.setContenuto(body.contenuto());
+        found.setTempoLettura(body.tempoLettura());
         found.setUtente(userFound);
         this.blogsRepository.save(found);
         System.out.println("Blog aggiornato correttamente");

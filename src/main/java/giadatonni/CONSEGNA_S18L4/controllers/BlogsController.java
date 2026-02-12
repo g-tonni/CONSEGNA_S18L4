@@ -1,7 +1,7 @@
 package giadatonni.CONSEGNA_S18L4.controllers;
 
 import giadatonni.CONSEGNA_S18L4.entities.Blog;
-import giadatonni.CONSEGNA_S18L4.payload.BlogPayload;
+import giadatonni.CONSEGNA_S18L4.payload.BlogDTO;
 import giadatonni.CONSEGNA_S18L4.services.BlogsService;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -27,7 +27,7 @@ public class BlogsController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Blog addBlog(@RequestBody BlogPayload body){
+    public Blog addBlog(@RequestBody BlogDTO body){
         return blogsService.postaBlog(body);
     }
 
@@ -37,7 +37,7 @@ public class BlogsController {
     }
 
     @PutMapping("/{blogId}")
-    public Blog putBlog(@PathVariable UUID blogId, @RequestBody BlogPayload body){
+    public Blog putBlog(@PathVariable UUID blogId, @RequestBody BlogDTO body){
         return blogsService.modificaBlog(blogId, body);
     }
 

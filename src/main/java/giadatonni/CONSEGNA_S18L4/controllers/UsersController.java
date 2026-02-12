@@ -2,7 +2,7 @@ package giadatonni.CONSEGNA_S18L4.controllers;
 
 import giadatonni.CONSEGNA_S18L4.entities.Blog;
 import giadatonni.CONSEGNA_S18L4.entities.User;
-import giadatonni.CONSEGNA_S18L4.payload.UserPayload;
+import giadatonni.CONSEGNA_S18L4.payload.UserDTO;
 import giadatonni.CONSEGNA_S18L4.services.UsersService;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -30,7 +30,7 @@ public class UsersController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public User addUser(@RequestBody UserPayload body){
+    public User addUser(@RequestBody UserDTO body){
         return usersService.postaUtente(body);
     }
 
@@ -40,7 +40,7 @@ public class UsersController {
     }
 
     @PutMapping("/{userId}")
-    public User putUser(@PathVariable UUID userId, @RequestBody UserPayload body){
+    public User putUser(@PathVariable UUID userId, @RequestBody UserDTO body){
         return usersService.modificaUtente(userId, body);
     }
 

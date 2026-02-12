@@ -3,8 +3,8 @@ package giadatonni.CONSEGNA_S18L4.services;
 import giadatonni.CONSEGNA_S18L4.entities.Blog;
 import giadatonni.CONSEGNA_S18L4.entities.User;
 import giadatonni.CONSEGNA_S18L4.exceptions.NotFoundException;
-import giadatonni.CONSEGNA_S18L4.exceptions.ValidationException;
-import giadatonni.CONSEGNA_S18L4.payload.UserPayload;
+import giadatonni.CONSEGNA_S18L4.exceptions.BadRequestException;
+import giadatonni.CONSEGNA_S18L4.payload.UserDTO;
 import giadatonni.CONSEGNA_S18L4.repositories.BlogsRepository;
 import giadatonni.CONSEGNA_S18L4.repositories.UsersRepository;
 import lombok.AllArgsConstructor;
@@ -39,9 +39,9 @@ public class UsersService {
         return this.usersRepository.findAll(pageable);
     }
 
-   public User postaUtente(UserPayload body) {
-        if(this.usersRepository.existsByEmail(body.getEmail())) throw new ValidationException("Email già in uso");
-        User nuovoUtente = new User(body.getNome(), body.getCognome(), body.getEmail(), body.getDataNascita());
+   public User postaUtente(UserDTO body) {
+        if(this.usersRepository.existsByEmail(body.email())) throw new BadRequestException("Email già in uso");
+        User nuovoUtente = new User(body.nome(), body.cognome(), body.email(), body.dataNascita());
         this.usersRepository.save(nuovoUtente);
         System.out.println("Utente salvato");
         return nuovoUtente;
@@ -52,15 +52,15 @@ public class UsersService {
         return found;
     }
 
-    public User modificaUtente(UUID userId, UserPayload body){
+    public User modificaUtente(UUID userId, UserDTO body){
         User found = this.trovaUtente(userId);
-        if(!found.getEmail().equals(body.getEmail())){
-           if(this.usersRepository.existsByEmail(body.getEmail())) throw new ValidationException("Email già in uso");
+        if(!found.getEmail().equals(body.email())){
+           if(this.usersRepository.existsByEmail(body.email())) throw new BadRequestException("Email già in uso");
         }
-        found.setNome(body.getNome());
-        found.setCognome(body.getCognome());
-        found.setEmail(body.getEmail());
-        found.setDataNascita(body.getDataNascita());
+        found.setNome(body.nome());
+        found.setCognome(body.cognome());
+        found.setEmail(body.email());
+        found.setDataNascita(body.dataNascita());
         this.usersRepository.save(found);
         System.out.println("L'utente con id " + userId + " è stato aggiornato");
         return found;
