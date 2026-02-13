@@ -75,16 +75,12 @@ public class UsersController {
         usersService.eliminaUtente(userId);
     }
 
-  /*  @PatchMapping("/{userId}/avatar")
-    public void uploadImage(@RequestParam("profile_picture") MultipartFile file, @PathVariable UUID userId) {
+    @PatchMapping("/{userId}/avatar")
+    public User uploadImage(@RequestParam("profile_picture") MultipartFile file, @PathVariable UUID userId) {
         // profile_picture deve corrispondere ESATTAMENTE al campo del Form Data dove viene inserito il file
         // se così non è il file non verrà trovato
-        System.out.println(file.getName());
-        // return this.usersService.uploadAvatar(userId, file);
-    }*/
+        //System.out.println(file.getName());
+        return this.usersService.uploadAvatar(userId, file);
+    }
 
-    /*@PatchMapping("/picture")
-    public void upload(@RequestParam("picture") MultipartFile file){
-        System.out.println(file.getName());
-    }*/
 }

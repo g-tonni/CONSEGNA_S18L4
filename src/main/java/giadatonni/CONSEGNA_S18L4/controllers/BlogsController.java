@@ -62,8 +62,4 @@ public class BlogsController {
         blogsService.eliminaBlog(blogId);
     }
 
-    @PatchMapping("/picture")
-    public void upload(@RequestParam("picture") MultipartFile file){
-        System.out.println(file.getName());
-    }
 }
